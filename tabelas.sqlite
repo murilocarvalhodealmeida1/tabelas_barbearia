@@ -1,0 +1,64 @@
+CREATE TABLE IF NOT EXISTS clientes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  cpf VARCHAR(14) NOT NULL UNIQUE,
+  telefone VARCHAR(15),
+  email VARCHAR(100),
+  data_nascimento DATE,
+  endereco TEXT
+);
+
+INSERT INTO clientes (nome, cpf, telefone, email, data_nascimento, endereco)
+VALUES (
+  'murilo',
+  '123.456.789-00',
+  '(45) 99999-9991',
+  'emailmurelo@coisas.xyz',
+  '1985-06-15',
+  'Rua manoel gostoso, 123, São Miguel do Gostoso - RN' 
+);
+
+CREATE table if not EXISTS barbeiros (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  cpf VARCHAR(14) NOT NULL UNIQUE,
+  telefone VARCHAR(15),
+  email VARCHAR(100),
+  data_nascimento DATE,
+  endereco TEXT,
+  especialidade TEXT
+  );
+  
+INSERT INTO barbeiros (nome, cpf, telefone, email, data_nascimento, endereco)
+VALUES (
+  'nome'
+  '123.456.779-00'
+  '(99) 99999-9999'
+  'email@contato.exemplo'
+  '2008-06-05'
+  'Rua rua, 123, cidade exemplo - estado exemplo'
+);
+
+CREATE table if not exists servicos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  preco DECIMAL(8,2) NOT NULL,
+  duracao INTEGER,
+  descricao TEXT
+);
+
+INSERT INTO servicos (nome, preco, duracao, descricao)
+VALUES (
+  'nome servico'
+  '65.00'
+  '30'
+  'descricao servico'
+);
+
+CREATE TABLE IF NOT EXISTS agendamentos (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   FOREIGN key (nome_cli) REFERENCES clientes(nome),
+   FOREIGN key (nome_barbeiro) REFERENCES barbeiros(nome),
+   FOREIGN KEY (nome_servico) REFERENCES servicos(nome)
+);
+  
