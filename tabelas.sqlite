@@ -1,3 +1,4 @@
+-- Tabela de clientes
 CREATE TABLE IF NOT EXISTS clientes (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome VARCHAR(100) NOT NULL,
@@ -8,7 +9,8 @@ CREATE TABLE IF NOT EXISTS clientes (
   endereco TEXT
 );
 
-INSERT INTO clientes (nome, cpf, telefone, email, data_nascimento, endereco)
+-- INSERT OR IGNORE = "só insere se não existir ainda"
+INSERT OR IGNORE INTO clientes (nome, cpf, telefone, email, data_nascimento, endereco)
 VALUES (
   'murilo',
   '123.456.789-00',
@@ -18,7 +20,8 @@ VALUES (
   'Rua manoel gostoso, 123, São Miguel do Gostoso - RN' 
 );
 
-CREATE table if not EXISTS barbeiros (
+-- Tabela de barbeiros
+CREATE TABLE IF NOT EXISTS barbeiros (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome VARCHAR(100) NOT NULL,
   cpf VARCHAR(14) NOT NULL UNIQUE,
@@ -27,19 +30,21 @@ CREATE table if not EXISTS barbeiros (
   data_nascimento DATE,
   endereco TEXT,
   especialidade TEXT
-  );
+);
   
-INSERT INTO barbeiros (nome, cpf, telefone, email, data_nascimento, endereco)
+INSERT OR IGNORE INTO barbeiros (nome, cpf, telefone, email, data_nascimento, endereco, especialidade)
 VALUES (
-  'nome'
-  '123.456.779-00'
-  '(99) 99999-9999'
-  'email@contato.exemplo'
-  '2008-06-05'
-  'Rua rua, 123, cidade exemplo - estado exemplo'
+  'João Silva',
+  '987.654.321-22',
+  '(99) 99999-9999',
+  'email@contato.exemplo',
+  '2008-06-05',
+  'Rua rua, 123, cidade exemplo - estado exemplo',
+  'Corte masculino'
 );
 
-CREATE table if not exists servicos (
+-- Tabela de serviços
+CREATE TABLE IF NOT EXISTS servicos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome VARCHAR(100) NOT NULL,
   preco DECIMAL(8,2) NOT NULL,
@@ -47,18 +52,50 @@ CREATE table if not exists servicos (
   descricao TEXT
 );
 
-INSERT INTO servicos (nome, preco, duracao, descricao)
+INSERT OR IGNORE INTO servicos (nome, preco, duracao, descricao)
 VALUES (
-  'nome servico'
-  '65.00'
-  '30'
-  'descricao servico'
+  'Corte de cabelo',
+  65.00,
+  30,
+  'Corte de cabelo masculino tradicional'
 );
 
+-- Tabela de agendamentos (CORRIGIDA)
 CREATE TABLE IF NOT EXISTS agendamentos (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
-   FOREIGN key (nome_cli) REFERENCES clientes(nome),
-   FOREIGN key (nome_barbeiro) REFERENCES barbeiros(nome),
-   FOREIGN KEY (nome_servico) REFERENCES servicos(nome)
+   cliente_id INTEGER NOT NULL,
+   barbeiro_id INTEGER NOT NULL,
+   servico_id INTEGER NOT NULL,
+   data_agendamento DATETIME NOT NULL,
+   status VARCHAR(20) DEFAULT 'agendado',
+   FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+   FOREIGN KEY (barbeiro_id) REFERENCES barbeiros(id),
+   FOREIGN KEY (servico_id) REFERENCES servicos(id)
 );
-  
+
+-- Exemplo de agendamento
+INSERT OR IGNORE INTO agendamentos (cliente_id, barbeiro_id, servico_id, data_agendamento)
+VALUES (1, 1, 1, '2025-06-15 14:30:00');
+
+-- COMANDOS PARA VER OS DADOS
+SELECT 'CLIENTES CADASTRADOS:' as info;
+SELECT * FROM clientes;
+
+SELECT 'BARBEIROS CADASTRADOS:' as info;
+SELECT * FROM barbeiros;
+
+SELECT 'SERVIÇOS DISPONÍVEIS:' as info;
+SELECT * FROM servicos;
+
+SELECT 'AGENDAMENTOS:' as info;
+SELECT 
+    a.id as agendamento_id,
+    c.nome as cliente,
+    b.nome as barbeiro,
+    s.nome as servico,
+    a.data_agendamento,
+    a.status
+FROM agendamentos a
+JOIN clientes c ON a.cliente_id = c.id
+JOIN barbeiros b ON a.barbeiro_id = b.id
+JOIN servicos s ON a.servico_id = s.id;
